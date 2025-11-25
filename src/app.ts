@@ -1,3 +1,9 @@
+import express from "express";
+import { setupSecurity } from "./common/middlewares/security";
+import { setupRequestLogger } from "./common/middlewares/requestLogger";
+import { notFoundHandler } from "./common/middlewares/notFound";
+import { errorHandler } from "./common/middlewares/errorHandler";
+import healthRoutes from "./modules/health/health.route";
 import authRoutes from "./modules/auth/auth.route";
 import companiesRoutes from "./modules/companies/companies.route";
 import outletsRoutes from "./modules/outlets/outlets.route";
