@@ -1,3 +1,4 @@
+-- Down migration not implemented for initial schema
 BEGIN;
 
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";

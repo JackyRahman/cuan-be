@@ -1,0 +1,1 @@
+-- Down migration not implemented for initial schema
