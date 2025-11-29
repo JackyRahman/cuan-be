@@ -22,15 +22,17 @@ declare module "swagger-jsdoc" {
 
 declare module "postgrator" {
   interface PostgratorConfig {
+    driver: "pg" | "mysql" | "mssql" | "sqlite3";
     migrationPattern: string;
-    driver: "pg";
-    host: string;
-    port: number;
-    database: string;
-    username: string;
-    password: string;
-    ssl?: { rejectUnauthorized: boolean };
     schemaTable?: string;
+    host?: string;
+    port?: number;
+    database?: string;
+    username?: string;
+    password?: string;
+    ssl?: boolean | Record<string, unknown>;
+    execQuery?: (query: string) => Promise<unknown>;
+    endConnection?: () => Promise<void> | void;
   }
 
   export default class Postgrator {

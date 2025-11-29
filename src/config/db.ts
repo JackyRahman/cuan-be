@@ -10,6 +10,8 @@ export const pool = new Pool({
   ssl: env.db.ssl ? { rejectUnauthorized: false } : undefined
 });
 
+console.log("DB config:", env.db);
+
 export async function query<T = any>(text: string, params?: any[]): Promise<T[]> {
   const client = await pool.connect();
   try {
