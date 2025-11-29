@@ -1,34 +1,49 @@
+import fs from "fs";
 import path from "path";
 import Postgrator from "postgrator";
-import { Pool } from "pg";
 import env from "../config/env";
+import { pool } from "../config/db";
 
 async function runMigrations() {
-  const pool = new Pool({
-    host: env.db.host,
-    port: env.db.port,
-    database: env.db.name,
-    user: env.db.user,
-    password: env.db.password,
-    ssl: env.db.ssl ? { rejectUnauthorized: false } : false
-  });
+  const migrationsDir = path.join(process.cwd(), "src/db/migrations");
+  console.log("Running migrations from:", migrationsDir);
+
+  try {
+    const files = fs.existsSync(migrationsDir)
+      ? fs.readdirSync(migrationsDir)
+      : [];
+    console.log("Found migration files:", files);
+  } catch (err) {
+    console.error("Unable to read migration directory:", err);
+  }
+
+  // pakai * aja, biar semua file di folder itu dicek Postgrator
+  const migrationPattern = path.join(migrationsDir, "*").replace(/\\/g, "/");
 
   const postgrator = new Postgrator({
+    migrationPattern,
     driver: "pg",
-    migrationPattern: path.join(__dirname, "../db/migrations/*.*.sql"),
+    database: env.db.name,
     schemaTable: "schema_version",
-    execQuery: (query) => pool.query(query)
+    // WAJIB di postgrator versi baru
+    execQuery: (query: string) => pool.query(query),
   });
 
   try {
-    console.log("Running migrations...");
     const result = await postgrator.migrate("max");
-    console.log("Migration finished at version:", result?.version);
-    await pool.end();
+
+    if (!result) {
+      console.log("No migrations were run (already at max or no valid files).");
+    } else {
+      console.log("Migrations completed. Current version:", result.version);
+    }
+
     process.exit(0);
-  } catch (err) {
+  } catch (err: any) {
     console.error("Migration error:", err);
-    await pool.end();
+    if (err.appliedMigrations) {
+      console.error("Applied migrations before error:", err.appliedMigrations);
+    }
     process.exit(1);
   }
 }
