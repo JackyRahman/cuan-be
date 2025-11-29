@@ -1,5 +1,11 @@
 import swaggerJSDoc from "swagger-jsdoc";
 
+type SwaggerJSDocOptions = {
+  definition?: Record<string, unknown>;
+  swaggerDefinition?: Record<string, unknown>;
+  apis: string[];
+};
+
 const swaggerDefinition = {
   openapi: "3.0.0",
   info: {
@@ -15,7 +21,7 @@ const swaggerDefinition = {
   ]
 };
 
-const options: swaggerJSDoc.Options = {
+const options: SwaggerJSDocOptions = {
   swaggerDefinition,
   apis: ["./src/modules/**/*.route.ts", "./src/modules/**/*.controller.ts"]
 };

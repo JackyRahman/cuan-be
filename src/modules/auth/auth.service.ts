@@ -102,16 +102,18 @@ export async function login(
   );
   const roles = rolesRows.map((r) => r.name);
 
-  const payload = {
+  const payload: jwt.JwtPayload = {
     id: user.id,
     companyId: user.company_id,
     username: user.username,
     roles
   };
 
-  const token = jwt.sign(payload, env.jwt.secret, {
-    expiresIn: env.jwt.expiresIn
-  });
+  const signOptions: jwt.SignOptions = {
+    expiresIn: env.jwt.expiresIn as jwt.SignOptions["expiresIn"]
+  };
+
+  const token = jwt.sign(payload, env.jwt.secret as jwt.Secret, signOptions);
 
   return {
     token,
