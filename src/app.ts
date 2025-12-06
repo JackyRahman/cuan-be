@@ -9,6 +9,12 @@ import healthRoutes from "./modules/health/health.route";
 import authRoutes from "./modules/auth/auth.route";
 import companiesRoutes from "./modules/companies/companies.route";
 import outletsRoutes from "./modules/outlets/outlets.route";
+import categoriesRoutes from "./modules/categories/categories.route";
+import brandsRoutes from "./modules/brands/brands.route";
+import unitsRoutes from "./modules/units/units.route";
+import productsRoutes from "./modules/products/products.route";
+import warehousesRoutes from "./modules/warehouses/warehouses.route";
+import inventoryRoutes from "./modules/inventory/inventory.route";
 
 const app = express();
 
@@ -23,6 +29,12 @@ app.use("/health", healthRoutes);
 app.use("/auth", authRoutes);
 app.use("/companies", companiesRoutes);
 app.use("/outlets", outletsRoutes);
+app.use("/categories", categoriesRoutes);
+app.use("/brands", brandsRoutes);
+app.use("/units", unitsRoutes);
+app.use("/products", productsRoutes);
+app.use("/warehouses", warehousesRoutes);
+app.use("/inventory", inventoryRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
