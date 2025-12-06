@@ -1,3 +1,4 @@
+import type { AddBarcodeDto, CreateProductDto, CreateVariantDto } from "./products.dto";
 import { query } from "../../config/db";
 
 export interface ProductEntity {
@@ -30,15 +31,9 @@ export interface ProductBarcodeEntity {
   is_primary: boolean;
 }
 
-export async function createProduct(payload: {
-  companyId: string;
-  categoryId?: string;
-  brandId?: string;
-  name: string;
-  code?: string;
-  description?: string;
-  isService?: boolean;
-}): Promise<ProductEntity> {
+export async function createProduct(
+  payload: CreateProductDto & { companyId: string }
+): Promise<ProductEntity> {
   const rows = await query<ProductEntity>(
     `INSERT INTO products (company_id, category_id, brand_id, name, code, description, is_service)
      VALUES ($1, $2, $3, $4, $5, $6, $7)
@@ -126,14 +121,7 @@ export async function listProducts(companyId: string): Promise<any[]> {
   return Array.from(productsMap.values());
 }
 
-export async function createVariant(payload: {
-  productId: string;
-  name?: string;
-  sku?: string;
-  unitId?: string;
-  costPrice?: number;
-  sellPrice?: number;
-}): Promise<ProductVariantEntity> {
+export async function createVariant(payload: CreateVariantDto): Promise<ProductVariantEntity> {
   const rows = await query<ProductVariantEntity>(
     `INSERT INTO product_variants (product_id, name, sku, unit_id, cost_price, sell_price)
      VALUES ($1, $2, $3, $4, $5, $6)
@@ -150,11 +138,7 @@ export async function createVariant(payload: {
   return rows[0];
 }
 
-export async function addBarcode(payload: {
-  variantId: string;
-  barcode: string;
-  isPrimary?: boolean;
-}): Promise<ProductBarcodeEntity> {
+export async function addBarcode(payload: AddBarcodeDto): Promise<ProductBarcodeEntity> {
   if (payload.isPrimary) {
     await query(
       `UPDATE product_barcodes

@@ -1,6 +1,7 @@
 import { PoolClient } from "pg";
 import { query, withTransaction } from "../../config/db";
 import { ApiError } from "../../common/errors/ApiError";
+import type { AdjustStockDto, StockAdjustLineDto } from "./inventory.dto";
 
 export interface InventoryBalance {
   id: string;
@@ -53,19 +54,11 @@ export async function getInventoryByWarehouseForCompany(
   return rows;
 }
 
-interface StockAdjustLine {
-  variantId: string;
-  qtyDiff: number;
-  unitCost?: number;
-}
-
 export async function adjustStock(
   companyId: string,
-  warehouseId: string,
-  note: string | undefined,
-  lines: StockAdjustLine[]
+  payload: AdjustStockDto
 ): Promise<{ stockMovementId: string }> {
-  if (lines.length === 0) {
+  if (payload.lines.length === 0) {
     throw new ApiError(400, "Lines cannot be empty", "EMPTY_LINES");
   }
 
@@ -79,7 +72,7 @@ export async function adjustStock(
          AND o.company_id = $2
          AND w.deleted_at IS NULL
       `,
-      [warehouseId, companyId]
+      [payload.warehouseId, companyId]
     );
     if (!whRes.rows[0]) {
       throw new ApiError(404, "Warehouse not found", "NOT_FOUND");
@@ -99,11 +92,11 @@ export async function adjustStock(
       VALUES ($1, $2, NULL, 'ADJUSTMENT', NULL, now(), $3)
       RETURNING id
       `,
-      [companyId, warehouseId, note || null]
+      [companyId, payload.warehouseId, payload.note || null]
     );
     const stockMovementId = smRes.rows[0].id as string;
 
-    for (const line of lines) {
+    for (const line of payload.lines) {
       if (line.qtyDiff === 0) continue;
 
       await client.query(
@@ -128,7 +121,7 @@ export async function adjustStock(
           qty = inventory_balances.qty + EXCLUDED.qty,
           updated_at = now()
         `,
-        [warehouseId, line.variantId, line.qtyDiff]
+        [payload.warehouseId, line.variantId, line.qtyDiff]
       );
     }
 

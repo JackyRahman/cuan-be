@@ -1,3 +1,4 @@
+import type { CreateCategoryDto } from "./categories.dto";
 import { query } from "../../config/db";
 import { ApiError } from "../../common/errors/ApiError";
 
@@ -10,12 +11,9 @@ export interface CategoryEntity {
   is_active: boolean;
 }
 
-export async function createCategory(payload: {
-  companyId: string;
-  name: string;
-  code?: string;
-  parentId?: string;
-}): Promise<CategoryEntity> {
+export async function createCategory(
+  payload: CreateCategoryDto & { companyId: string }
+): Promise<CategoryEntity> {
   const rows = await query<CategoryEntity>(
     `INSERT INTO categories (company_id, name, code, parent_id)
      VALUES ($1, $2, $3, $4)

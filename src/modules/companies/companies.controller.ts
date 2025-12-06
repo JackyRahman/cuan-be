@@ -1,15 +1,8 @@
 import { Request, Response } from "express";
-import { z } from "zod";
 import { sendSuccess } from "../../common/utils/apiResponse";
 import { createCompany, getCompanies, getCompanyById } from "./companies.service";
 import { ApiError } from "../../common/errors/ApiError";
-
-const createCompanySchema = z.object({
-  name: z.string().min(1),
-  code: z.string().min(1).optional(),
-  taxId: z.string().optional(),
-  address: z.string().optional()
-});
+import { createCompanySchema } from "./companies.dto";
 
 export const createCompanyHandler = async (req: Request, res: Response) => {
   const parsed = createCompanySchema.safeParse(req.body);

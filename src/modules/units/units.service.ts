@@ -1,3 +1,4 @@
+import type { CreateUnitDto } from "./units.dto";
 import { query } from "../../config/db";
 import { ApiError } from "../../common/errors/ApiError";
 
@@ -10,12 +11,7 @@ export interface UnitEntity {
   is_active: boolean;
 }
 
-export async function createUnit(payload: {
-  companyId: string;
-  name: string;
-  shortName?: string;
-  code?: string;
-}): Promise<UnitEntity> {
+export async function createUnit(payload: CreateUnitDto & { companyId: string }): Promise<UnitEntity> {
   const rows = await query<UnitEntity>(
     `INSERT INTO units (company_id, name, short_name, code)
      VALUES ($1, $2, $3, $4)

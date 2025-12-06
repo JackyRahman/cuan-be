@@ -4,6 +4,7 @@ import env from "../../config/env";
 import { ApiError } from "../../common/errors/ApiError";
 import { query } from "../../config/db";
 import { createUser, findUserByUsername, UserEntity } from "../users/users.repository";
+import type { LoginDto, RegisterOwnerDto } from "./auth.dto";
 
 interface LoginResult {
   token: string;
@@ -31,13 +32,7 @@ async function hasOwnerUser(companyId: string): Promise<boolean> {
   return parseInt(rows[0]?.count || "0", 10) > 0;
 }
 
-export async function registerOwner(payload: {
-  companyId: string;
-  fullName: string;
-  username: string;
-  email?: string;
-  password: string;
-}): Promise<UserEntity> {
+export async function registerOwner(payload: RegisterOwnerDto): Promise<UserEntity> {
   const ownerExists = await hasOwnerUser(payload.companyId);
   if (ownerExists) {
     throw new ApiError(400, "Owner already exists for this company", "OWNER_EXISTS");
@@ -67,28 +62,24 @@ export async function registerOwner(payload: {
   return user;
 }
 
-export async function login(
-  companyCode: string,
-  username: string,
-  password: string
-): Promise<LoginResult> {
+export async function login(payload: LoginDto): Promise<LoginResult> {
   const companies = await query<{ id: string; code: string }>(
     `SELECT id, code FROM companies
       WHERE code = $1
         AND deleted_at IS NULL`,
-    [companyCode]
+    [payload.companyCode]
   );
   const company = companies[0];
   if (!company) {
     throw new ApiError(400, "Invalid company", "INVALID_COMPANY");
   }
 
-  const user = await findUserByUsername(company.id, username);
+  const user = await findUserByUsername(company.id, payload.username);
   if (!user || !user.is_active) {
     throw new ApiError(401, "Invalid credentials", "INVALID_LOGIN");
   }
 
-  const ok = await bcrypt.compare(password, user.password_hash);
+  const ok = await bcrypt.compare(payload.password, user.password_hash);
   if (!ok) {
     throw new ApiError(401, "Invalid credentials", "INVALID_LOGIN");
   }
@@ -102,7 +93,7 @@ export async function login(
   );
   const roles = rolesRows.map((r) => r.name);
 
-  const payload: jwt.JwtPayload = {
+  const jwtPayload: jwt.JwtPayload = {
     id: user.id,
     companyId: user.company_id,
     username: user.username,
@@ -113,7 +104,7 @@ export async function login(
     expiresIn: env.jwt.expiresIn as jwt.SignOptions["expiresIn"]
   };
 
-  const token = jwt.sign(payload, env.jwt.secret as jwt.Secret, signOptions);
+  const token = jwt.sign(jwtPayload, env.jwt.secret as jwt.Secret, signOptions);
 
   return {
     token,

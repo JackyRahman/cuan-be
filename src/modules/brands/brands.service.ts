@@ -1,3 +1,4 @@
+import type { CreateBrandDto } from "./brands.dto";
 import { query } from "../../config/db";
 import { ApiError } from "../../common/errors/ApiError";
 
@@ -9,11 +10,7 @@ export interface BrandEntity {
   is_active: boolean;
 }
 
-export async function createBrand(payload: {
-  companyId: string;
-  name: string;
-  code?: string;
-}): Promise<BrandEntity> {
+export async function createBrand(payload: CreateBrandDto & { companyId: string }): Promise<BrandEntity> {
   const rows = await query<BrandEntity>(
     `INSERT INTO brands (company_id, name, code)
      VALUES ($1, $2, $3)

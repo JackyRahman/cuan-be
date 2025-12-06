@@ -8,12 +8,7 @@ import {
   listCategories,
   getCategoryById
 } from "./categories.service";
-
-const createCategorySchema = z.object({
-  name: z.string().min(1),
-  code: z.string().optional(),
-  parentId: z.string().uuid().optional()
-});
+import { createCategorySchema } from "./categories.dto";
 
 export const createCategoryHandler = async (req: AuthRequest, res: Response) => {
   if (!req.user) throw new ApiError(401, "Unauthorized", "UNAUTHORIZED");

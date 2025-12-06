@@ -1,16 +1,9 @@
 import { Response } from "express";
-import { z } from "zod";
 import { sendSuccess } from "../../common/utils/apiResponse";
 import { createOutlet, getOutlets, getOutletById } from "./outlets.service";
 import { ApiError } from "../../common/errors/ApiError";
 import { AuthRequest } from "../../common/types/express";
-
-const createOutletSchema = z.object({
-  name: z.string().min(1),
-  code: z.string().optional(),
-  address: z.string().optional(),
-  phone: z.string().optional()
-});
+import { createOutletSchema } from "./outlets.dto";
 
 export const createOutletHandler = async (req: AuthRequest, res: Response) => {
   if (!req.user) throw new ApiError(401, "Unauthorized", "UNAUTHORIZED");

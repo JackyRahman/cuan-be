@@ -1,3 +1,4 @@
+import type { CreateCompanyDto } from "./companies.dto";
 import { query } from "../../config/db";
 import { ApiError } from "../../common/errors/ApiError";
 
@@ -10,12 +11,7 @@ export interface CompanyEntity {
   is_active: boolean;
 }
 
-export async function createCompany(payload: {
-  name: string;
-  code?: string;
-  taxId?: string;
-  address?: string;
-}): Promise<CompanyEntity> {
+export async function createCompany(payload: CreateCompanyDto): Promise<CompanyEntity> {
   const rows = await query<CompanyEntity>(
     `INSERT INTO companies (name, code, tax_id, address)
      VALUES ($1, $2, $3, $4)

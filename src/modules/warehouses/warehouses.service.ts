@@ -1,3 +1,4 @@
+import type { CreateWarehouseDto } from "./warehouses.dto";
 import { query } from "../../config/db";
 import { ApiError } from "../../common/errors/ApiError";
 
@@ -10,12 +11,7 @@ export interface WarehouseEntity {
   is_active: boolean;
 }
 
-export async function createWarehouse(payload: {
-  outletId: string;
-  name: string;
-  code?: string;
-  type?: string;
-}): Promise<WarehouseEntity> {
+export async function createWarehouse(payload: CreateWarehouseDto): Promise<WarehouseEntity> {
   const rows = await query<WarehouseEntity>(
     `INSERT INTO warehouses (outlet_id, name, code, type)
      VALUES ($1, $2, $3, $4)

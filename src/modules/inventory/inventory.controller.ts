@@ -1,27 +1,9 @@
 import { Response } from "express";
-import { z } from "zod";
 import { AuthRequest } from "../../common/types/express";
 import { sendSuccess } from "../../common/utils/apiResponse";
 import { ApiError } from "../../common/errors/ApiError";
 import { adjustStock, getInventoryByWarehouseForCompany } from "./inventory.service";
-
-const getInventorySchema = z.object({
-  warehouseId: z.string().uuid()
-});
-
-const adjustStockSchema = z.object({
-  warehouseId: z.string().uuid(),
-  note: z.string().optional(),
-  lines: z
-    .array(
-      z.object({
-        variantId: z.string().uuid(),
-        qtyDiff: z.number().refine(n => n !== 0, { message: "qtyDiff cannot be 0" }),
-        unitCost: z.number().nonnegative().optional()
-      })
-    )
-    .min(1)
-});
+import { adjustStockSchema, getInventorySchema } from "./inventory.dto";
 
 export const getInventoryByWarehouseHandler = async (
   req: AuthRequest,
@@ -51,8 +33,6 @@ export const adjustStockHandler = async (req: AuthRequest, res: Response) => {
     throw new ApiError(400, "Validation error", "VALIDATION_ERROR", parsed.error.format());
   }
 
-  const { warehouseId, note, lines } = parsed.data;
-
-  const result = await adjustStock(req.user.companyId, warehouseId, note, lines);
+  const result = await adjustStock(req.user.companyId, parsed.data);
   return sendSuccess(res, result, "Stock adjusted", 201);
 };

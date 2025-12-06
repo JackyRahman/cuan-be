@@ -1,5 +1,4 @@
 import { Response } from "express";
-import { z } from "zod";
 import { sendSuccess } from "../../common/utils/apiResponse";
 import { ApiError } from "../../common/errors/ApiError";
 import { AuthRequest } from "../../common/types/express";
@@ -9,30 +8,7 @@ import {
   createVariant,
   listProducts
 } from "./products.service";
-
-const createProductSchema = z.object({
-  categoryId: z.string().uuid().optional(),
-  brandId: z.string().uuid().optional(),
-  name: z.string().min(1),
-  code: z.string().optional(),
-  description: z.string().optional(),
-  isService: z.boolean().optional()
-});
-
-const createVariantSchema = z.object({
-  productId: z.string().uuid(),
-  name: z.string().optional(),
-  sku: z.string().optional(),
-  unitId: z.string().uuid().optional(),
-  costPrice: z.number().nonnegative().optional(),
-  sellPrice: z.number().nonnegative().optional()
-});
-
-const addBarcodeSchema = z.object({
-  variantId: z.string().uuid(),
-  barcode: z.string().min(1),
-  isPrimary: z.boolean().optional()
-});
+import { addBarcodeSchema, createProductSchema, createVariantSchema } from "./products.dto";
 
 export const createProductHandler = async (req: AuthRequest, res: Response) => {
   if (!req.user) throw new ApiError(401, "Unauthorized", "UNAUTHORIZED");

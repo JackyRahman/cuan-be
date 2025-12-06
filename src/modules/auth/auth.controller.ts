@@ -1,22 +1,8 @@
 import { Request, Response } from "express";
-import { z } from "zod";
 import { sendSuccess } from "../../common/utils/apiResponse";
 import { registerOwner, login } from "./auth.service";
 import { ApiError } from "../../common/errors/ApiError";
-
-const registerSchema = z.object({
-  companyId: z.string().uuid(),
-  fullName: z.string().min(1),
-  username: z.string().min(3),
-  email: z.string().email().optional(),
-  password: z.string().min(6)
-});
-
-const loginSchema = z.object({
-  companyCode: z.string().min(1),
-  username: z.string().min(1),
-  password: z.string().min(1)
-});
+import { loginSchema, registerSchema } from "./auth.dto";
 
 export const registerOwnerHandler = async (req: Request, res: Response) => {
   const parseResult = registerSchema.safeParse(req.body);
@@ -53,7 +39,6 @@ export const loginHandler = async (req: Request, res: Response) => {
     throw new ApiError(400, "Validation error", "VALIDATION_ERROR", parseResult.error.format());
   }
 
-  const { companyCode, username, password } = parseResult.data;
-  const result = await login(companyCode, username, password);
+  const result = await login(parseResult.data);
   return sendSuccess(res, result, "Login success");
 };

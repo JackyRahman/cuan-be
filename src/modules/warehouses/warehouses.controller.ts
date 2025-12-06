@@ -1,5 +1,4 @@
 import { Response } from "express";
-import { z } from "zod";
 import { AuthRequest } from "../../common/types/express";
 import { sendSuccess } from "../../common/utils/apiResponse";
 import { ApiError } from "../../common/errors/ApiError";
@@ -8,13 +7,7 @@ import {
   getWarehouseByIdForCompany,
   listWarehousesByCompany
 } from "./warehouses.service";
-
-const createWarehouseSchema = z.object({
-  outletId: z.string().uuid(),
-  name: z.string().min(1),
-  code: z.string().optional(),
-  type: z.string().optional()
-});
+import { createWarehouseSchema } from "./warehouses.dto";
 
 export const createWarehouseHandler = async (req: AuthRequest, res: Response) => {
   if (!req.user) throw new ApiError(401, "Unauthorized", "UNAUTHORIZED");

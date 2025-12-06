@@ -1,3 +1,4 @@
+import type { CreateOutletDto } from "./outlets.dto";
 import { query } from "../../config/db";
 import { ApiError } from "../../common/errors/ApiError";
 
@@ -11,13 +12,9 @@ export interface OutletEntity {
   is_active: boolean;
 }
 
-export async function createOutlet(payload: {
-  companyId: string;
-  name: string;
-  code?: string;
-  address?: string;
-  phone?: string;
-}): Promise<OutletEntity> {
+export async function createOutlet(
+  payload: CreateOutletDto & { companyId: string }
+): Promise<OutletEntity> {
   const rows = await query<OutletEntity>(
     `INSERT INTO outlets (company_id, name, code, address, phone)
      VALUES ($1, $2, $3, $4, $5)
