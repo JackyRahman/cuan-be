@@ -22,10 +22,11 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 setupSecurity(app);
 setupRequestLogger(app);
 
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/health", healthRoutes);
 app.use("/auth", authRoutes);
 app.use("/companies", companiesRoutes);
