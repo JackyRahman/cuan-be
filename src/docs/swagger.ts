@@ -1,10 +1,15 @@
 import swaggerJSDoc from "swagger-jsdoc";
 
+import env from "../config/env";
+
 type SwaggerJSDocOptions = {
   definition?: Record<string, unknown>;
   swaggerDefinition?: Record<string, unknown>;
   apis: string[];
 };
+
+const swaggerServerUrl =
+  process.env.SWAGGER_SERVER_URL || `http://localhost:${env.port}`;
 
 const swaggerDefinition = {
   openapi: "3.0.0",
@@ -13,7 +18,7 @@ const swaggerDefinition = {
     version: "1.0.0",
     description: "API backend untuk aplikasi toko / supermarket / petshop"
   },
-   components: {
+  components: {
     securitySchemes: {
       bearerAuth: {
         type: "http",
@@ -24,8 +29,8 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: "http://localhost:4000",
-      description: "Local dev"
+      url: swaggerServerUrl,
+      description: env.nodeEnv === "production" ? "Production" : "Local dev"
     }
   ]
 };
