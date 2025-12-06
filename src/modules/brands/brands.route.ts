@@ -32,9 +32,37 @@ router.use(authMiddleware);
  *                 type: string
  *               code:
  *                 type: string
+ *           example:
+ *             name: "Nike"
+ *             code: "NIKE"
  *     responses:
  *       201:
  *         description: Brand created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     name:
+ *                       type: string
+ *                     code:
+ *                       type: string
+ *             example:
+ *               success: true
+ *               message: "Brand created"
+ *               data:
+ *                 id: "11111111-2222-3333-4444-555555555555"
+ *                 name: "Nike"
+ *                 code: "NIKE"
  *   get:
  *     security:
  *       - bearerAuth: []
@@ -44,6 +72,21 @@ router.use(authMiddleware);
  *     responses:
  *       200:
  *         description: List of brands
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "OK"
+ *               data:
+ *                 - id: "11111111-2222-3333-4444-555555555555"
+ *                   name: "Nike"
+ *                   code: "NIKE"
+ *                 - id: "22222222-3333-4444-5555-666666666666"
+ *                   name: "Adidas"
+ *                   code: "ADIDAS"
+  *     responses:
+  *       200:
+  *         description: List of brands
  */
 router.post("/", requireRole("OWNER"), createBrandHandler);
 
@@ -78,9 +121,19 @@ router.get("/", listBrandsHandler);
  *         schema:
  *           type: string
  *           format: uuid
+ *           example: "11111111-2222-3333-4444-555555555555"
  *     responses:
  *       200:
  *         description: Brand detail
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "OK"
+ *               data:
+ *                 id: "11111111-2222-3333-4444-555555555555"
+ *                 name: "Nike"
+ *                 code: "NIKE"
  */
 router.get("/:id", getBrandHandler);
 

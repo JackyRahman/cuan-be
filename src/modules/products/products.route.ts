@@ -23,8 +23,23 @@ router.use(authMiddleware);
  *     responses:
  *       200:
  *         description: List of products
- *   post:
- *     security:
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "OK"
+ *               data:
+ *                 - id: "11111111-2222-3333-4444-555555555555"
+ *                   name: "Product A"
+ *                   code: "PRD-A"
+ *                   brandName: "Nike"
+ *                   categoryName: "Shoes"
+ *                   isService: false
+ *     responses:
+ *       200:
+ *         description: List of products
+  *   post:
+  *     security:
  *       - bearerAuth: []
  *     tags:
  *       - Products
@@ -52,9 +67,26 @@ router.use(authMiddleware);
  *                 type: string
  *               isService:
  *                 type: boolean
+ *           example:
+ *             categoryId: "33333333-4444-5555-6666-777777777777"
+ *             brandId: "22222222-3333-4444-5555-666666666666"
+ *             name: "Product A"
+ *             code: "PRD-A"
+ *             description: "Comfortable running shoes"
+ *             isService: false
  *     responses:
  *       201:
  *         description: Product created
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "Product created"
+ *               data:
+ *                 id: "11111111-2222-3333-4444-555555555555"
+ *                 name: "Product A"
+ *                 code: "PRD-A"
+ *                 isService: false
  */
 router.get("/", listProductsHandler);
 
@@ -90,9 +122,26 @@ router.get("/", listProductsHandler);
  *                 type: string
  *               isService:
  *                 type: boolean
+ *           example:
+ *             categoryId: "33333333-4444-5555-6666-777777777777"
+ *             brandId: "22222222-3333-4444-5555-666666666666"
+ *             name: "Product A"
+ *             code: "PRD-A"
+ *             description: "Comfortable running shoes"
+ *             isService: false
  *     responses:
  *       201:
  *         description: Product created
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "Product created"
+ *               data:
+ *                 id: "11111111-2222-3333-4444-555555555555"
+ *                 name: "Product A"
+ *                 code: "PRD-A"
+ *                 isService: false
  */
 router.post("/", requireRole("OWNER"), createProductHandler);
 
@@ -132,9 +181,26 @@ router.post("/", requireRole("OWNER"), createProductHandler);
  *                 type: number
  *                 format: float
  *                 minimum: 0
+ *           example:
+ *             productId: "11111111-2222-3333-4444-555555555555"
+ *             name: "Size 42"
+ *             sku: "PRD-A-42"
+ *             unitId: "66666666-7777-8888-9999-aaaaaaaaaaaa"
+ *             costPrice: 250000
+ *             sellPrice: 350000
  *     responses:
  *       201:
  *         description: Variant created
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "Variant created"
+ *               data:
+ *                 id: "99999999-aaaa-bbbb-cccc-dddddddddddd"
+ *                 productId: "11111111-2222-3333-4444-555555555555"
+ *                 name: "Size 42"
+ *                 sku: "PRD-A-42"
  */
 router.post("/variants", requireRole("OWNER"), createVariantHandler);
 
@@ -164,9 +230,23 @@ router.post("/variants", requireRole("OWNER"), createVariantHandler);
  *                 type: string
  *               isPrimary:
  *                 type: boolean
+ *           example:
+ *             variantId: "99999999-aaaa-bbbb-cccc-dddddddddddd"
+ *             barcode: "8991234567890"
+ *             isPrimary: true
  *     responses:
  *       201:
  *         description: Barcode added
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "Barcode added"
+ *               data:
+ *                 id: "bbbbbbbb-cccc-dddd-eeee-ffffffffffff"
+ *                 variantId: "99999999-aaaa-bbbb-cccc-dddddddddddd"
+ *                 barcode: "8991234567890"
+ *                 isPrimary: true
  */
 router.post("/barcodes", requireRole("OWNER"), addBarcodeHandler);
 

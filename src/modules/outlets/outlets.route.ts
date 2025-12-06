@@ -36,18 +36,53 @@ router.use(authMiddleware);
  *                 type: string
  *               phone:
  *                 type: string
+ *           example:
+ *             name: "Outlet Sudirman"
+ *             code: "OUT-JKT"
+ *             address: "Jl. Jend. Sudirman No. 10, Jakarta"
+ *             phone: "+62-812-0000-0000"
  *     responses:
  *       201:
  *         description: Outlet created
- *   get:
- *     security:
- *       - bearerAuth: []
- *     tags:
- *       - Outlets
- *     summary: List outlets
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "Outlet created"
+ *               data:
+ *                 id: "11111111-2222-3333-4444-555555555555"
+ *                 name: "Outlet Sudirman"
+ *                 code: "OUT-JKT"
+ *                 address: "Jl. Jend. Sudirman No. 10, Jakarta"
+ *                 phone: "+62-812-0000-0000"
+   *   get:
+   *     security:
+   *       - bearerAuth: []
+   *     tags:
+   *       - Outlets
+   *     summary: List outlets
  *     responses:
  *       200:
  *         description: List of outlets
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "OK"
+ *               data:
+ *                 - id: "11111111-2222-3333-4444-555555555555"
+ *                   name: "Outlet Sudirman"
+ *                   code: "OUT-JKT"
+ *                   address: "Jl. Jend. Sudirman No. 10, Jakarta"
+ *                   phone: "+62-812-0000-0000"
+ *                 - id: "22222222-3333-4444-5555-666666666666"
+ *                   name: "Outlet Dago"
+ *                   code: "OUT-BDG"
+ *                   address: "Jl. Dago No. 1, Bandung"
+ *                   phone: "+62-811-1111-1111"
+   *     responses:
+   *       200:
+   *         description: List of outlets
  */
 router.post("/", requireRole("OWNER"), createOutletHandler);
 
@@ -82,9 +117,21 @@ router.get("/", listOutletsHandler);
  *         schema:
  *           type: string
  *           format: uuid
+ *           example: "11111111-2222-3333-4444-555555555555"
  *     responses:
  *       200:
  *         description: Outlet detail
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "OK"
+ *               data:
+ *                 id: "11111111-2222-3333-4444-555555555555"
+ *                 name: "Outlet Sudirman"
+ *                 code: "OUT-JKT"
+ *                 address: "Jl. Jend. Sudirman No. 10, Jakarta"
+ *                 phone: "+62-812-0000-0000"
  */
 router.get("/:id", getOutletHandler);
 

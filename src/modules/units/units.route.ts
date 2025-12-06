@@ -34,18 +34,49 @@ router.use(authMiddleware);
  *                 type: string
  *               code:
  *                 type: string
+ *           example:
+ *             name: "Pieces"
+ *             shortName: "pcs"
+ *             code: "PCS"
  *     responses:
  *       201:
  *         description: Unit created
- *   get:
- *     security:
- *       - bearerAuth: []
- *     tags:
- *       - Units
- *     summary: List units
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "Unit created"
+ *               data:
+ *                 id: "11111111-2222-3333-4444-555555555555"
+ *                 name: "Pieces"
+ *                 shortName: "pcs"
+ *                 code: "PCS"
+   *   get:
+   *     security:
+   *       - bearerAuth: []
+   *     tags:
+   *       - Units
+   *     summary: List units
  *     responses:
  *       200:
  *         description: List of units
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "OK"
+ *               data:
+ *                 - id: "11111111-2222-3333-4444-555555555555"
+ *                   name: "Pieces"
+ *                   shortName: "pcs"
+ *                   code: "PCS"
+ *                 - id: "22222222-3333-4444-5555-666666666666"
+ *                   name: "Kilogram"
+ *                   shortName: "kg"
+ *                   code: "KG"
+   *     responses:
+   *       200:
+   *         description: List of units
  */
 router.post("/", requireRole("OWNER"), createUnitHandler);
 
@@ -80,9 +111,20 @@ router.get("/", listUnitsHandler);
  *         schema:
  *           type: string
  *           format: uuid
+*           example: "11111111-2222-3333-4444-555555555555"
  *     responses:
  *       200:
  *         description: Unit detail
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "OK"
+ *               data:
+ *                 id: "11111111-2222-3333-4444-555555555555"
+ *                 name: "Pieces"
+ *                 shortName: "pcs"
+ *                 code: "PCS"
  */
 router.get("/:id", getUnitHandler);
 

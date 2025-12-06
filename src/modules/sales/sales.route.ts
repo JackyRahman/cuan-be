@@ -79,6 +79,21 @@ router.use(authMiddleware);
  *                       type: number
  *                     reference:
  *                       type: string
+ *           example:
+ *             outletId: "11111111-2222-3333-4444-555555555555"
+ *             shiftId: "22222222-3333-4444-5555-666666666666"
+ *             warehouseId: "77777777-8888-9999-aaaa-bbbbbbbbbbbb"
+ *             customerId: "33333333-4444-5555-6666-777777777777"
+ *             note: "Thank you for your purchase"
+ *             items:
+ *               - variantId: "99999999-aaaa-bbbb-cccc-dddddddddddd"
+ *                 qty: 2
+ *                 unitPrice: 75000
+ *                 discountAmount: 5000
+ *             payments:
+ *               - paymentMethodId: "00000000-1111-2222-3333-444444444444"
+ *                 amount: 145000
+ *                 reference: "CASH"
  *     responses:
  *       201:
  *         description: Sale created
@@ -128,6 +143,7 @@ router.post("/", requireAnyRole(["OWNER", "KASIR"]), createSaleHandler);
  *         schema:
  *           type: string
  *           format: uuid
+ *           example: "11111111-2222-3333-4444-555555555555"
  *       - in: query
  *         name: dateFrom
  *         schema:
@@ -148,6 +164,8 @@ router.post("/", requireAnyRole(["OWNER", "KASIR"]), createSaleHandler);
  *               properties:
  *                 success:
  *                   type: boolean
+ *                 message:
+ *                   type: strin
  *                 data:
  *                   type: array
  *                   items:
@@ -168,6 +186,7 @@ router.post("/", requireAnyRole(["OWNER", "KASIR"]), createSaleHandler);
  *                         type: number
  *             example:
  *               success: true
+ *               message: "OK"
  *               data:
  *                 - id: "sale-1"
  *                   invoiceNumber: "OUT/20250201/1234"
@@ -194,6 +213,7 @@ router.get("/", requireAnyRole(["OWNER", "KASIR"]), listSalesHandler);
  *         schema:
  *           type: string
  *           format: uuid
+ *           example: "sale-1"
  *     responses:
  *       200:
  *         description: Sale detail
@@ -204,6 +224,8 @@ router.get("/", requireAnyRole(["OWNER", "KASIR"]), listSalesHandler);
  *               properties:
  *                 success:
  *                   type: boolean
+ *                 message:
+ *                   type: string
  *                 data:
  *                   type: object
  *                   properties:
@@ -283,6 +305,7 @@ router.get("/", requireAnyRole(["OWNER", "KASIR"]), listSalesHandler);
  *                             nullable: true
  *             example:
  *               success: true
+ *               message: "OK"
  *               data:
  *                 id: "sale-1"
  *                 invoiceNumber: "OUT/20250201/1234"

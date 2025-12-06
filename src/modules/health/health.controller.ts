@@ -10,6 +10,16 @@ export const healthCheck = async (_req: Request, res: Response) => {
    *     tags:
    *       - Health
    *     summary: Health check
+   *     responses:
+   *       200:
+   *         description: Service status
+   *         content:
+   *           application/json:
+   *             example:
+   *               success: true
+   *               message: "Service healthy"
+   *               data:
+   *                 status: "OK"
    */
   return sendSuccess(res, { status: "OK" }, "Service healthy");
 };

@@ -38,18 +38,53 @@ router.use(authMiddleware);
  *                 type: string
  *               type:
  *                 type: string
+ *           example:
+ *             outletId: "22222222-3333-4444-5555-666666666666"
+ *             name: "Warehouse Jakarta"
+ *             code: "WH-JKT"
+ *             type: "MAIN"
  *     responses:
  *       201:
  *         description: Warehouse created
- *   get:
- *     security:
- *       - bearerAuth: []
- *     tags:
- *       - Warehouses
- *     summary: List warehouses
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "Warehouse created"
+ *               data:
+ *                 id: "11111111-2222-3333-4444-555555555555"
+ *                 outletId: "22222222-3333-4444-5555-666666666666"
+ *                 name: "Warehouse Jakarta"
+ *                 code: "WH-JKT"
+ *                 type: "MAIN"
+   *   get:
+   *     security:
+   *       - bearerAuth: []
+   *     tags:
+   *       - Warehouses
+   *     summary: List warehouses
  *     responses:
  *       200:
  *         description: List of warehouses
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "OK"
+ *               data:
+ *                 - id: "11111111-2222-3333-4444-555555555555"
+ *                   outletId: "22222222-3333-4444-5555-666666666666"
+ *                   name: "Warehouse Jakarta"
+ *                   code: "WH-JKT"
+ *                   type: "MAIN"
+ *                 - id: "99999999-aaaa-bbbb-cccc-dddddddddddd"
+ *                   outletId: "33333333-4444-5555-6666-777777777777"
+ *                   name: "Warehouse Bandung"
+ *                   code: "WH-BDG"
+ *                   type: "BRANCH"
+   *     responses:
+   *       200:
+   *         description: List of warehouses
  */
 router.post("/", requireRole("OWNER"), createWarehouseHandler);
 
@@ -84,9 +119,21 @@ router.get("/", listWarehousesHandler);
  *         schema:
  *           type: string
  *           format: uuid
+ *           example: "11111111-2222-3333-4444-555555555555"
  *     responses:
  *       200:
  *         description: Warehouse detail
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "OK"
+ *               data:
+ *                 id: "11111111-2222-3333-4444-555555555555"
+ *                 outletId: "22222222-3333-4444-5555-666666666666"
+ *                 name: "Warehouse Jakarta"
+ *                 code: "WH-JKT"
+ *                 type: "MAIN"
  */
 router.get("/:id", getWarehouseHandler);
 
