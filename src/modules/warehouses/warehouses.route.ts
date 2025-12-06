@@ -57,7 +57,13 @@ router.use(authMiddleware);
  *                 name: "Warehouse Jakarta"
  *                 code: "WH-JKT"
  *                 type: "MAIN"
-   *   get:
+ */
+router.post("/", requireRole("OWNER"), createWarehouseHandler);
+
+/**
+ * @openapi
+ * /warehouses:
+  *   get:
    *     security:
    *       - bearerAuth: []
    *     tags:
@@ -82,24 +88,6 @@ router.use(authMiddleware);
  *                   name: "Warehouse Bandung"
  *                   code: "WH-BDG"
  *                   type: "BRANCH"
-   *     responses:
-   *       200:
-   *         description: List of warehouses
- */
-router.post("/", requireRole("OWNER"), createWarehouseHandler);
-
-/**
- * @openapi
- * /warehouses:
- *   get:
- *     security:
- *       - bearerAuth: []
- *     tags:
- *       - Warehouses
- *     summary: List warehouses
- *     responses:
- *       200:
- *         description: List of warehouses
  */
 router.get("/", listWarehousesHandler);
 

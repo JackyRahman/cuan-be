@@ -44,8 +44,6 @@ router.post("/register-owner", registerOwnerHandler);
  *             password: "superSecret123"
  *     responses:
  *       201:
- *         description: Owner created successfully
- *          content:
  *           application/json:
  *             schema:
  *               type: object

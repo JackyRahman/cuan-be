@@ -51,12 +51,18 @@ const router = Router();
  *                 code: "CUAN"
  *                 taxId: "01.234.567.8-999.000"
  *                 address: "Jl. Kebon Jeruk No. 1, Jakarta"
-   *   get:
-   *     security:
-   *       - bearerAuth: []
-   *     tags:
-   *       - Companies
-   *     summary: List companies
+ */
+router.post("/", createCompanyHandler);
+
+/**
+ * @openapi
+ * /companies:
+  *   get:
+  *     security:
+  *       - bearerAuth: []
+  *     tags:
+  *       - Companies
+  *     summary: List companies
  *     responses:
  *       200:
  *         description: List of companies
@@ -76,24 +82,6 @@ const router = Router();
  *                   code: "UNTG"
  *                   taxId: "02.345.678.9-888.000"
  *                   address: "Jl. Merdeka No. 2, Bandung"
-   *     responses:
-   *       200:
-   *         description: List of companies
- */
-router.post("/", createCompanyHandler);
-
-/**
- * @openapi
- * /companies:
- *   get:
- *     security:
- *       - bearerAuth: []
- *     tags:
- *       - Companies
- *     summary: List companies
- *     responses:
- *       200:
- *         description: List of companies
  */
 router.get("/", authMiddleware, requireRole("OWNER"), listCompaniesHandler);
 

@@ -63,6 +63,12 @@ router.use(authMiddleware);
  *                 id: "11111111-2222-3333-4444-555555555555"
  *                 name: "Nike"
  *                 code: "NIKE"
+ */
+router.post("/", requireRole("OWNER"), createBrandHandler);
+
+/**
+ * @openapi
+ * /brands:
  *   get:
  *     security:
  *       - bearerAuth: []
@@ -84,24 +90,6 @@ router.use(authMiddleware);
  *                 - id: "22222222-3333-4444-5555-666666666666"
  *                   name: "Adidas"
  *                   code: "ADIDAS"
-  *     responses:
-  *       200:
-  *         description: List of brands
- */
-router.post("/", requireRole("OWNER"), createBrandHandler);
-
-/**
- * @openapi
- * /brands:
- *   get:
- *     security:
- *       - bearerAuth: []
- *     tags:
- *       - Brands
- *     summary: List brands
- *     responses:
- *       200:
- *         description: List of brands
  */
 router.get("/", listBrandsHandler);
 

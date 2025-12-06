@@ -52,6 +52,12 @@ router.use(authMiddleware);
  *                 name: "Electronics"
  *                 code: "ELEC"
  *                 parentId: null
+ */
+router.post("/", requireRole("OWNER"), createCategoryHandler);
+
+/**
+ * @openapi
+ * /categories:
    *   get:
    *     security:
    *       - bearerAuth: []
@@ -75,24 +81,6 @@ router.use(authMiddleware);
  *                   name: "Smartphone"
  *                   code: "PHONE"
  *                   parentId: "11111111-2222-3333-4444-555555555555"
-   *     responses:
-   *       200:
-   *         description: List of categories
- */
-router.post("/", requireRole("OWNER"), createCategoryHandler);
-
-/**
- * @openapi
- * /categories:
- *   get:
- *     security:
- *       - bearerAuth: []
- *     tags:
- *       - Categories
- *     summary: List categories
- *     responses:
- *       200:
- *         description: List of categories
  */
 router.get("/", listCategoriesHandler);
 

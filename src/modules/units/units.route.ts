@@ -51,6 +51,11 @@ router.use(authMiddleware);
  *                 name: "Pieces"
  *                 shortName: "pcs"
  *                 code: "PCS"
+ */
+router.post("/", requireRole("OWNER"), createUnitHandler);
+
+/**
+ * @openapi
    *   get:
    *     security:
    *       - bearerAuth: []
@@ -74,24 +79,6 @@ router.use(authMiddleware);
  *                   name: "Kilogram"
  *                   shortName: "kg"
  *                   code: "KG"
-   *     responses:
-   *       200:
-   *         description: List of units
- */
-router.post("/", requireRole("OWNER"), createUnitHandler);
-
-/**
- * @openapi
- * /units:
- *   get:
- *     security:
- *       - bearerAuth: []
- *     tags:
- *       - Units
- *     summary: List units
- *     responses:
- *       200:
- *         description: List of units
  */
 router.get("/", listUnitsHandler);
 

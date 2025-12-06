@@ -35,58 +35,6 @@ router.use(authMiddleware);
  *                   brandName: "Nike"
  *                   categoryName: "Shoes"
  *                   isService: false
- *     responses:
- *       200:
- *         description: List of products
-  *   post:
-  *     security:
- *       - bearerAuth: []
- *     tags:
- *       - Products
- *     summary: Create a product
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - name
- *             properties:
- *               categoryId:
- *                 type: string
- *                 format: uuid
- *               brandId:
- *                 type: string
- *                 format: uuid
- *               name:
- *                 type: string
- *               code:
- *                 type: string
- *               description:
- *                 type: string
- *               isService:
- *                 type: boolean
- *           example:
- *             categoryId: "33333333-4444-5555-6666-777777777777"
- *             brandId: "22222222-3333-4444-5555-666666666666"
- *             name: "Product A"
- *             code: "PRD-A"
- *             description: "Comfortable running shoes"
- *             isService: false
- *     responses:
- *       201:
- *         description: Product created
- *         content:
- *           application/json:
- *             example:
- *               success: true
- *               message: "Product created"
- *               data:
- *                 id: "11111111-2222-3333-4444-555555555555"
- *                 name: "Product A"
- *                 code: "PRD-A"
- *                 isService: false
  */
 router.get("/", listProductsHandler);
 

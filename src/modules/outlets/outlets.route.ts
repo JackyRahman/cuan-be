@@ -55,6 +55,12 @@ router.use(authMiddleware);
  *                 code: "OUT-JKT"
  *                 address: "Jl. Jend. Sudirman No. 10, Jakarta"
  *                 phone: "+62-812-0000-0000"
+ */
+router.post("/", requireRole("OWNER"), createOutletHandler);
+
+/**
+ * @openapi
+ * /outlets:
    *   get:
    *     security:
    *       - bearerAuth: []
@@ -80,24 +86,6 @@ router.use(authMiddleware);
  *                   code: "OUT-BDG"
  *                   address: "Jl. Dago No. 1, Bandung"
  *                   phone: "+62-811-1111-1111"
-   *     responses:
-   *       200:
-   *         description: List of outlets
- */
-router.post("/", requireRole("OWNER"), createOutletHandler);
-
-/**
- * @openapi
- * /outlets:
- *   get:
- *     security:
- *       - bearerAuth: []
- *     tags:
- *       - Outlets
- *     summary: List outlets
- *     responses:
- *       200:
- *         description: List of outlets
  */
 router.get("/", listOutletsHandler);
 
