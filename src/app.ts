@@ -15,6 +15,7 @@ import unitsRoutes from "./modules/units/units.route";
 import productsRoutes from "./modules/products/products.route";
 import warehousesRoutes from "./modules/warehouses/warehouses.route";
 import inventoryRoutes from "./modules/inventory/inventory.route";
+import salesRoutes from "./modules/sales/sales.route";
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use("/units", unitsRoutes);
 app.use("/products", productsRoutes);
 app.use("/warehouses", warehousesRoutes);
 app.use("/inventory", inventoryRoutes);
+app.use("/sales", salesRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

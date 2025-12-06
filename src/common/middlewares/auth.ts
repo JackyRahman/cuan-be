@@ -29,6 +29,20 @@ export function requireRole(role: string) {
     if (!req.user.roles.includes(role)) {
       return sendError(res, "Forbidden", 403, "FORBIDDEN");
     }
+     next();
+  };
+}
+
+export function requireAnyRole(roles: string[]) {
+  return (req: AuthRequest, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return sendError(res, "Unauthorized", 401, "UNAUTHORIZED");
+    }
+
+    const hasRole = roles.some((role) => req.user?.roles.includes(role));
+    if (!hasRole) {
+      return sendError(res, "Forbidden", 403, "FORBIDDEN");
+    }
     next();
   };
 }
