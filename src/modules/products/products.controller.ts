@@ -5,10 +5,16 @@ import { AuthRequest } from "../../common/types/express";
 import {
   addBarcode,
   createProduct,
+  createProductWithRelations,
   createVariant,
   listProducts
 } from "./products.service";
-import { addBarcodeSchema, createProductSchema, createVariantSchema } from "./products.dto";
+import {
+  addBarcodeSchema,
+  createProductSchema,
+  createProductWithRelationsSchema,
+  createVariantSchema
+} from "./products.dto";
 
 export const createProductHandler = async (req: AuthRequest, res: Response) => {
   if (!req.user) throw new ApiError(401, "Unauthorized", "UNAUTHORIZED");
@@ -24,6 +30,22 @@ export const createProductHandler = async (req: AuthRequest, res: Response) => {
   });
 
   return sendSuccess(res, product, "Product created", 201);
+};
+
+export const createProductWithRelationsHandler = async (req: AuthRequest, res: Response) => {
+  if (!req.user) throw new ApiError(401, "Unauthorized", "UNAUTHORIZED");
+
+  const parsed = createProductWithRelationsSchema.safeParse(req.body);
+  if (!parsed.success) {
+    throw new ApiError(400, "Validation error", "VALIDATION_ERROR", parsed.error.format());
+  }
+
+  const product = await createProductWithRelations({
+    companyId: req.user.companyId,
+    ...parsed.data
+  });
+
+  return sendSuccess(res, product, "Product with variants created", 201);
 };
 
 export const listProductsHandler = async (req: AuthRequest, res: Response) => {

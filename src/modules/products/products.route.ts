@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   addBarcodeHandler,
   createProductHandler,
+  createProductWithRelationsHandler,
   createVariantHandler,
   listProductsHandler
 } from "./products.controller";
@@ -92,6 +93,103 @@ router.get("/", listProductsHandler);
  *                 isService: false
  */
 router.post("/", requireRole("OWNER"), createProductHandler);
+
+/**
+ * @openapi
+ * /products/full:
+ *   post:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Products
+ *     summary: Create a product with variants and barcodes
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - variants
+ *             properties:
+ *               categoryId:
+ *                 type: string
+ *                 format: uuid
+ *               brandId:
+ *                 type: string | null
+ *                 format: uuid
+ *               name:
+ *                 type: string
+ *               code:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               isService:
+ *                 type: boolean
+ *               variants:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                     sku:
+ *                       type: string
+ *                     unitId:
+ *                       type: string
+ *                       format: uuid
+ *                     costPrice:
+ *                       type: number
+ *                       format: float
+ *                     sellPrice:
+ *                       type: number
+ *                       format: float
+ *                     barcodes:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           barcode:
+ *                             type: string
+ *                           isPrimary:
+ *                             type: boolean
+ *           example:
+ *             name: "Product A"
+ *             code: "PRD-A"
+ *             variants:
+ *               - name: "Size 42"
+ *                 sku: "PRD-A-42"
+ *                 costPrice: 250000
+ *                 sellPrice: 350000
+ *                 barcodes:
+ *                   - barcode: "8991234567890"
+ *                     isPrimary: true
+ *                   - barcode: "8991234567891"
+ *               - name: "Size 43"
+ *                 sku: "PRD-A-43"
+ *                 barcodes:
+ *                   - barcode: "8991234567892"
+ *     responses:
+ *       201:
+ *         description: Product created with variants and barcodes
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "Product with variants created"
+ *               data:
+ *                 id: "11111111-2222-3333-4444-555555555555"
+ *                 name: "Product A"
+ *                 variants:
+ *                   - id: "variant-id-1"
+ *                     name: "Size 42"
+ *                     barcodes:
+ *                       - id: "barcode-id-1"
+ *                         barcode: "8991234567890"
+ *                         is_primary: true
+ */
+router.post("/full", requireRole("OWNER"), createProductWithRelationsHandler);
 
 /**
  * @openapi

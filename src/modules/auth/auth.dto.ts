@@ -9,7 +9,7 @@ export const registerSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  companyCode: z.string().min(1),
+  companyCode: z.string().min(1).default("CUAN"),
   username: z.string().min(1),
   password: z.string().min(1)
 });

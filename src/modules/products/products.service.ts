@@ -1,5 +1,11 @@
-import type { AddBarcodeDto, CreateProductDto, CreateVariantDto } from "./products.dto";
-import { query } from "../../config/db";
+import type {
+  AddBarcodeDto,
+  CreateProductDto,
+  CreateProductWithRelationsDto,
+  CreateVariantDto
+} from "./products.dto";
+import { query, withTransaction } from "../../config/db";
+import { PoolClient } from "pg";
 
 export interface ProductEntity {
   id: string;
@@ -29,6 +35,10 @@ export interface ProductBarcodeEntity {
   variant_id: string;
   barcode: string;
   is_primary: boolean;
+}
+
+export interface ProductWithRelations extends ProductEntity {
+  variants: Array<ProductVariantEntity & { barcodes: ProductBarcodeEntity[] }>;
 }
 
 export async function createProduct(
@@ -155,4 +165,89 @@ export async function addBarcode(payload: AddBarcodeDto): Promise<ProductBarcode
     [payload.variantId, payload.barcode, payload.isPrimary ?? false]
   );
   return rows[0];
+  }
+
+function insertProduct(client: PoolClient, payload: CreateProductDto & { companyId: string }) {
+  return client.query<ProductEntity>(
+    `INSERT INTO products (company_id, category_id, brand_id, name, code, description, is_service)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)
+     RETURNING *`,
+    [
+      payload.companyId,
+      payload.categoryId || null,
+      payload.brandId || null,
+      payload.name,
+      payload.code || null,
+      payload.description || null,
+      payload.isService ?? false
+    ]
+  );
+}
+
+function insertVariant(client: PoolClient, payload: CreateVariantDto) {
+  return client.query<ProductVariantEntity>(
+    `INSERT INTO product_variants (product_id, name, sku, unit_id, cost_price, sell_price)
+     VALUES ($1, $2, $3, $4, $5, $6)
+     RETURNING *`,
+    [
+      payload.productId,
+      payload.name || null,
+      payload.sku || null,
+      payload.unitId || null,
+      payload.costPrice ?? 0,
+      payload.sellPrice ?? 0
+    ]
+  );
+}
+
+async function insertBarcode(
+  client: PoolClient,
+  payload: Omit<AddBarcodeDto, "variantId"> & { variantId: string }
+) {
+  if (payload.isPrimary) {
+    await client.query(`UPDATE product_barcodes SET is_primary = false WHERE variant_id = $1`, [
+      payload.variantId
+    ]);
+  }
+
+  return client.query<ProductBarcodeEntity>(
+    `INSERT INTO product_barcodes (variant_id, barcode, is_primary)
+     VALUES ($1, $2, $3)
+     RETURNING *`,
+    [payload.variantId, payload.barcode, payload.isPrimary ?? false]
+  );
+}
+
+export async function createProductWithRelations(
+  payload: CreateProductWithRelationsDto & { companyId: string }
+): Promise<ProductWithRelations> {
+  return withTransaction<ProductWithRelations>(async (client) => {
+    const productRes = await insertProduct(client, payload);
+    const product = productRes.rows[0];
+
+    const variants: Array<ProductVariantEntity & { barcodes: ProductBarcodeEntity[] }> = [];
+
+    for (const variant of payload.variants) {
+      const variantRes = await insertVariant(client, {
+        ...variant,
+        productId: product.id
+      });
+      const variantEntity = variantRes.rows[0];
+
+      const barcodes: ProductBarcodeEntity[] = [];
+      if (variant.barcodes && variant.barcodes.length > 0) {
+        for (const barcode of variant.barcodes) {
+          const barcodeRes = await insertBarcode(client, {
+            ...barcode,
+            variantId: variantEntity.id
+          });
+          barcodes.push(barcodeRes.rows[0]);
+        }
+      }
+
+      variants.push({ ...variantEntity, barcodes });
+    }
+
+    return { ...product, variants };
+  });
 }

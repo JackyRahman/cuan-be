@@ -24,6 +24,27 @@ export const addBarcodeSchema = z.object({
   isPrimary: z.boolean().optional()
 });
 
+const barcodeInputSchema = z.object({
+  barcode: z.string().min(1),
+  isPrimary: z.boolean().optional()
+});
+
+const variantWithBarcodesSchema = z.object({
+  name: z.string().optional(),
+  sku: z.string().optional(),
+  unitId: z.string().uuid().optional(),
+  costPrice: z.number().nonnegative().optional(),
+  sellPrice: z.number().nonnegative().optional(),
+  barcodes: z.array(barcodeInputSchema).optional()
+});
+
+export const createProductWithRelationsSchema = createProductSchema.extend({
+  variants: z
+    .array(variantWithBarcodesSchema)
+    .min(1, { message: "At least one variant is required" })
+});
+
 export type CreateProductDto = z.infer<typeof createProductSchema>;
 export type CreateVariantDto = z.infer<typeof createVariantSchema>;
 export type AddBarcodeDto = z.infer<typeof addBarcodeSchema>;
+export type CreateProductWithRelationsDto = z.infer<typeof createProductWithRelationsSchema>;

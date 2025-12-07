@@ -35,6 +35,7 @@ router.use(authMiddleware);
  *               parentId:
  *                 type: string
  *                 format: uuid
+ *                 nullable: true
  *           example:
  *             name: "Electronics"
  *             code: "ELEC"
