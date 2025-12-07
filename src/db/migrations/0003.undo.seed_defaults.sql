@@ -6,7 +6,7 @@ DO $$
 DECLARE
   v_company_id uuid;
 BEGIN
-  SELECT id INTO v_company_id FROM companies WHERE code = 'DEFAULT' LIMIT 1;
+  SELECT id INTO v_company_id FROM companies WHERE code = 'CUAN' LIMIT 1;
 
   IF v_company_id IS NOT NULL THEN
     DELETE FROM categories WHERE company_id = v_company_id;

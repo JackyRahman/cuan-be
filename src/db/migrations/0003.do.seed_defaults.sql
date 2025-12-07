@@ -27,7 +27,7 @@ DO $$
 DECLARE
   v_company_id uuid;
 BEGIN
-  SELECT id INTO v_company_id FROM companies WHERE code = 'DEFAULT' LIMIT 1;
+  SELECT id INTO v_company_id FROM companies WHERE code = 'CUAN' LIMIT 1;
 
   IF v_company_id IS NOT NULL THEN
     -- Create a primary outlet for the sample company
@@ -47,22 +47,13 @@ BEGIN
     SELECT v_company_id, c.name, c.code
     FROM (
       VALUES
-        ('Sembako', 'SEM'),
-        ('Minuman', 'MIN'),
-        ('Makanan Ringan', 'SNK'),
-        ('Perawatan Pribadi', 'PRP'),
-        ('Kebersihan Rumah', 'KBR'),
-        ('Elektronik', 'ELK'),
-        ('ATK & Kantor', 'ATK'),
-        ('Pakaian & Aksesoris', 'PKN'),
-        ('Ibu & Bayi', 'IBB'),
-        ('Makanan Beku', 'BKU')
+        ('Makanan', 'MKN')
     ) AS c(name, code)
     WHERE NOT EXISTS (
       SELECT 1 FROM categories existing
       WHERE existing.company_id = v_company_id
         AND (existing.name = c.name OR (existing.code IS NOT NULL AND existing.code = c.code))
-    -- );
+    );
 
     -- Seed common measurement units
     INSERT INTO units (company_id, name, short_name)
