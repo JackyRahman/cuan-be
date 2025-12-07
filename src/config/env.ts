@@ -5,6 +5,11 @@ dotenv.config();
 const env = {
   nodeEnv: process.env.NODE_ENV || "development",
   port: parseInt(process.env.PORT || "4000", 10),
+  cors: {
+    allowedOrigins:
+      process.env.CORS_ALLOWED_ORIGINS?.split(",").map(origin => origin.trim()) ||
+      ["*"]
+  },
   db: {
     host: process.env.DB_HOST || "localhost",
     port: parseInt(process.env.DB_PORT || "5432", 10),

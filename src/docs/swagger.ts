@@ -9,7 +9,9 @@ type SwaggerJSDocOptions = {
 };
 
 const swaggerServerUrl =
-  process.env.SWAGGER_SERVER_URL || `http://localhost:${env.port}`;
+  env.nodeEnv === "production"
+    ? process.env.SWAGGER_SERVER_URL || `/`
+    : `/`;
 
 const swaggerDefinition = {
   openapi: "3.0.0",
