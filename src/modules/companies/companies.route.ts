@@ -5,6 +5,7 @@ import {
   getCompanyHandler
 } from "./companies.controller";
 import { authMiddleware, requireRole } from "../../common/middlewares/auth";
+import { asyncHandler } from "../../common/utils/asyncHandler";
 
 const router = Router();
 
@@ -52,7 +53,7 @@ const router = Router();
  *                 taxId: "01.234.567.8-999.000"
  *                 address: "Jl. Kebon Jeruk No. 1, Jakarta"
  */
-router.post("/", createCompanyHandler);
+router.post("/", asyncHandler(createCompanyHandler));
 
 /**
  * @openapi
@@ -83,7 +84,7 @@ router.post("/", createCompanyHandler);
  *                   taxId: "02.345.678.9-888.000"
  *                   address: "Jl. Merdeka No. 2, Bandung"
  */
-router.get("/", authMiddleware, requireRole("OWNER"), listCompaniesHandler);
+router.get("/", authMiddleware, requireRole("OWNER"), asyncHandler(listCompaniesHandler));
 
 /**
  * @openapi
@@ -117,6 +118,6 @@ router.get("/", authMiddleware, requireRole("OWNER"), listCompaniesHandler);
  *                 taxId: "01.234.567.8-999.000"
  *                 address: "Jl. Kebon Jeruk No. 1, Jakarta"
  */
-router.get("/:id", authMiddleware, requireRole("OWNER"), getCompanyHandler);
+router.get("/:id", authMiddleware, requireRole("OWNER"), asyncHandler(getCompanyHandler));
 
 export default router;

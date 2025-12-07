@@ -5,6 +5,7 @@ import {
   getCategoryHandler
 } from "./categories.controller";
 import { authMiddleware, requireRole } from "../../common/middlewares/auth";
+import { asyncHandler } from "../../common/utils/asyncHandler";
 
 const router = Router();
 
@@ -54,7 +55,7 @@ router.use(authMiddleware);
  *                 code: "ELEC"
  *                 parentId: null
  */
-router.post("/", requireRole("OWNER"), createCategoryHandler);
+router.post("/", requireRole("OWNER"), asyncHandler(createCategoryHandler));
 
 /**
  * @openapi
@@ -83,7 +84,7 @@ router.post("/", requireRole("OWNER"), createCategoryHandler);
  *                   code: "PHONE"
  *                   parentId: "11111111-2222-3333-4444-555555555555"
  */
-router.get("/", listCategoriesHandler);
+router.get("/", asyncHandler(listCategoriesHandler));
 
 /**
  * @openapi
@@ -116,6 +117,6 @@ router.get("/", listCategoriesHandler);
  *                 code: "ELEC"
  *                 parentId: null
  */
-router.get("/:id", getCategoryHandler);
+router.get("/:id", asyncHandler(getCategoryHandler));
 
 export default router;

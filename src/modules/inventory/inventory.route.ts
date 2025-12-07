@@ -4,6 +4,7 @@ import {
   getInventoryByWarehouseHandler
 } from "./inventory.controller";
 import { authMiddleware, requireRole } from "../../common/middlewares/auth";
+import { asyncHandler } from "../../common/utils/asyncHandler";
 
 const router = Router();
 
@@ -42,7 +43,7 @@ router.use(authMiddleware);
  *                   qty: 120
  *                   unitName: "pcs"
  */
-router.get("/warehouse/:warehouseId", getInventoryByWarehouseHandler);
+router.get("/warehouse/:warehouseId", asyncHandler(getInventoryByWarehouseHandler));
 
 /**
  * @openapi
@@ -106,6 +107,6 @@ router.get("/warehouse/:warehouseId", getInventoryByWarehouseHandler);
  *               data:
  *                 adjustmentId: "aaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
  */
-router.post("/adjust", requireRole("OWNER"), adjustStockHandler);
+router.post("/adjust", requireRole("OWNER"), asyncHandler(adjustStockHandler));
 
 export default router;

@@ -5,6 +5,7 @@ import {
   listBrandsHandler
 } from "./brands.controller";
 import { authMiddleware, requireRole } from "../../common/middlewares/auth";
+import { asyncHandler } from "../../common/utils/asyncHandler";
 
 const router = Router();
 
@@ -64,7 +65,7 @@ router.use(authMiddleware);
  *                 name: "Nike"
  *                 code: "NIKE"
  */
-router.post("/", requireRole("OWNER"), createBrandHandler);
+router.post("/", requireRole("OWNER"), asyncHandler(createBrandHandler));
 
 /**
  * @openapi
@@ -91,7 +92,7 @@ router.post("/", requireRole("OWNER"), createBrandHandler);
  *                   name: "Adidas"
  *                   code: "ADIDAS"
  */
-router.get("/", listBrandsHandler);
+router.get("/", asyncHandler(listBrandsHandler));
 
 /**
  * @openapi
@@ -123,6 +124,6 @@ router.get("/", listBrandsHandler);
  *                 name: "Nike"
  *                 code: "NIKE"
  */
-router.get("/:id", getBrandHandler);
+router.get("/:id", asyncHandler(getBrandHandler));
 
 export default router;

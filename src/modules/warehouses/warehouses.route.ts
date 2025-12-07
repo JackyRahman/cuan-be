@@ -5,6 +5,7 @@ import {
   listWarehousesHandler
 } from "./warehouses.controller";
 import { authMiddleware, requireRole } from "../../common/middlewares/auth";
+import { asyncHandler } from "../../common/utils/asyncHandler";
 
 const router = Router();
 
@@ -58,7 +59,7 @@ router.use(authMiddleware);
  *                 code: "WH-JKT"
  *                 type: "MAIN"
  */
-router.post("/", requireRole("OWNER"), createWarehouseHandler);
+router.post("/", requireRole("OWNER"), asyncHandler(createWarehouseHandler));
 
 /**
  * @openapi
@@ -89,7 +90,7 @@ router.post("/", requireRole("OWNER"), createWarehouseHandler);
  *                   code: "WH-BDG"
  *                   type: "BRANCH"
  */
-router.get("/", listWarehousesHandler);
+router.get("/", asyncHandler(listWarehousesHandler));
 
 /**
  * @openapi
@@ -123,6 +124,6 @@ router.get("/", listWarehousesHandler);
  *                 code: "WH-JKT"
  *                 type: "MAIN"
  */
-router.get("/:id", getWarehouseHandler);
+router.get("/:id", asyncHandler(getWarehouseHandler));
 
 export default router;

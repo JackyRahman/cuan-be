@@ -5,6 +5,7 @@ import {
   getOutletHandler
 } from "./outlets.controller";
 import { authMiddleware, requireRole } from "../../common/middlewares/auth";
+import { asyncHandler } from "../../common/utils/asyncHandler";
 
 const router = Router();
 
@@ -56,7 +57,7 @@ router.use(authMiddleware);
  *                 address: "Jl. Jend. Sudirman No. 10, Jakarta"
  *                 phone: "+62-812-0000-0000"
  */
-router.post("/", requireRole("OWNER"), createOutletHandler);
+router.post("/", requireRole("OWNER"), asyncHandler(createOutletHandler));
 
 /**
  * @openapi
@@ -87,7 +88,7 @@ router.post("/", requireRole("OWNER"), createOutletHandler);
  *                   address: "Jl. Dago No. 1, Bandung"
  *                   phone: "+62-811-1111-1111"
  */
-router.get("/", listOutletsHandler);
+router.get("/", asyncHandler(listOutletsHandler));
 
 /**
  * @openapi
@@ -121,6 +122,6 @@ router.get("/", listOutletsHandler);
  *                 address: "Jl. Jend. Sudirman No. 10, Jakarta"
  *                 phone: "+62-812-0000-0000"
  */
-router.get("/:id", getOutletHandler);
+router.get("/:id", asyncHandler(getOutletHandler));
 
 export default router;

@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { loginHandler, registerOwnerHandler } from "./auth.controller";
+import { asyncHandler } from "../../common/utils/asyncHandler";
 
 const router = Router();
 
-router.post("/register-owner", registerOwnerHandler);
+router.post("/register-owner", asyncHandler(registerOwnerHandler));
 
 /**
  * @openapi
@@ -127,6 +128,6 @@ router.post("/register-owner", registerOwnerHandler);
  *                 accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
  *                 refreshToken: "def50200f1b2c3d4..."
  */
-router.post("/login", loginHandler);
+router.post("/login", asyncHandler(loginHandler));
 
 export default router;

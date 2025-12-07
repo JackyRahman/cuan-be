@@ -5,6 +5,7 @@ import {
   getSaleDetailHandler,
   listSalesHandler
 } from "./sales.controller";
+import { asyncHandler } from "../../common/utils/asyncHandler";
 
 const router = Router();
 
@@ -126,7 +127,7 @@ router.use(authMiddleware);
  *                 totalAmount: 150000
  *                 stockMovementId: "99999999-aaaa-bbbb-cccc-dddddddddddd"
  */
-router.post("/", requireAnyRole(["OWNER", "KASIR"]), createSaleHandler);
+router.post("/", requireAnyRole(["OWNER", "KASIR"]), asyncHandler(createSaleHandler));
 
 /**
  * @openapi
@@ -195,7 +196,7 @@ router.post("/", requireAnyRole(["OWNER", "KASIR"]), createSaleHandler);
  *                   customerName: "Budi"
  *                   totalAmount: 200000
  */
-router.get("/", requireAnyRole(["OWNER", "KASIR"]), listSalesHandler);
+router.get("/", requireAnyRole(["OWNER", "KASIR"]), asyncHandler(listSalesHandler));
 
 /**
  * @openapi
@@ -338,6 +339,6 @@ router.get("/", requireAnyRole(["OWNER", "KASIR"]), listSalesHandler);
  *                     paymentMethodName: "Cash"
  *                     paymentMethodCode: "CASH"
  */
-router.get("/:id", requireAnyRole(["OWNER", "KASIR"]), getSaleDetailHandler);
+router.get("/:id", requireAnyRole(["OWNER", "KASIR"]), asyncHandler(getSaleDetailHandler));
 
 export default router;

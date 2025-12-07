@@ -5,6 +5,7 @@ import {
   listUnitsHandler
 } from "./units.controller";
 import { authMiddleware, requireRole } from "../../common/middlewares/auth";
+import { asyncHandler } from "../../common/utils/asyncHandler";
 
 const router = Router();
 
@@ -52,7 +53,7 @@ router.use(authMiddleware);
  *                 shortName: "pcs"
  *                 code: "PCS"
  */
-router.post("/", requireRole("OWNER"), createUnitHandler);
+router.post("/", requireRole("OWNER"), asyncHandler(createUnitHandler));
 
 /**
  * @openapi
@@ -81,7 +82,7 @@ router.post("/", requireRole("OWNER"), createUnitHandler);
  *                   shortName: "kg"
  *                   code: "KG"
  */
-router.get("/", listUnitsHandler);
+router.get("/", asyncHandler(listUnitsHandler));
 
 /**
  * @openapi
@@ -114,6 +115,6 @@ router.get("/", listUnitsHandler);
  *                 shortName: "pcs"
  *                 code: "PCS"
  */
-router.get("/:id", getUnitHandler);
+router.get("/:id", asyncHandler(getUnitHandler));
 
 export default router;

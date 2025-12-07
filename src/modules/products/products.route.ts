@@ -7,6 +7,7 @@ import {
   listProductsHandler
 } from "./products.controller";
 import { authMiddleware, requireRole } from "../../common/middlewares/auth";
+import { asyncHandler } from "../../common/utils/asyncHandler";
 
 const router = Router();
 
@@ -37,7 +38,7 @@ router.use(authMiddleware);
  *                   categoryName: "Shoes"
  *                   isService: false
  */
-router.get("/", listProductsHandler);
+router.get("/", asyncHandler(listProductsHandler));
 
 /**
  * @openapi
@@ -92,7 +93,7 @@ router.get("/", listProductsHandler);
  *                 code: "PRD-A"
  *                 isService: false
  */
-router.post("/", requireRole("OWNER"), createProductHandler);
+router.post("/", requireRole("OWNER"), asyncHandler(createProductHandler));
 
 /**
  * @openapi
@@ -191,7 +192,7 @@ router.post("/", requireRole("OWNER"), createProductHandler);
  *                         barcode: "8991234567890"
  *                         is_primary: true
  */
-router.post("/full", requireRole("OWNER"), createProductWithRelationsHandler);
+router.post("/full", requireRole("OWNER"), asyncHandler(createProductWithRelationsHandler));
 
 /**
  * @openapi
@@ -250,7 +251,7 @@ router.post("/full", requireRole("OWNER"), createProductWithRelationsHandler);
  *                 name: "Size 42"
  *                 sku: "PRD-A-42"
  */
-router.post("/variants", requireRole("OWNER"), createVariantHandler);
+router.post("/variants", requireRole("OWNER"), asyncHandler(createVariantHandler));
 
 /**
  * @openapi
@@ -296,6 +297,6 @@ router.post("/variants", requireRole("OWNER"), createVariantHandler);
  *                 barcode: "8991234567890"
  *                 isPrimary: true
  */
-router.post("/barcodes", requireRole("OWNER"), addBarcodeHandler);
+router.post("/barcodes", requireRole("OWNER"), asyncHandler(addBarcodeHandler));
 
 export default router;
