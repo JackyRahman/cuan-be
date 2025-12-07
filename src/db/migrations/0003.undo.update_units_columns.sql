@@ -1,0 +1,4 @@
+ALTER TABLE units
+  DROP COLUMN IF EXISTS code,
+  DROP COLUMN IF EXISTS is_active,
+  DROP COLUMN IF EXISTS deleted_at;

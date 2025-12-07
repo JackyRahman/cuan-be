@@ -161,12 +161,14 @@ router.post("/", requireRole("OWNER"), createProductHandler);
  *               - name: "Size 42"
  *                 sku: "PRD-A-42"
  *                 costPrice: 250000
+ *                 unitId: "66666666-7777-8888-9999-aaaaaaaaaaaa"
  *                 sellPrice: 350000
  *                 barcodes:
  *                   - barcode: "8991234567890"
  *                     isPrimary: true
  *                   - barcode: "8991234567891"
  *               - name: "Size 43"
+ *                 unitId: "55555555-6666-7777-8888-999999999999"
  *                 sku: "PRD-A-43"
  *                 barcodes:
  *                   - barcode: "8991234567892"

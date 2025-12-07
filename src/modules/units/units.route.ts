@@ -56,12 +56,13 @@ router.post("/", requireRole("OWNER"), createUnitHandler);
 
 /**
  * @openapi
-   *   get:
-   *     security:
-   *       - bearerAuth: []
-   *     tags:
-   *       - Units
-   *     summary: List units
+ * /units:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - Units
+ *     summary: List units
  *     responses:
  *       200:
  *         description: List of units
