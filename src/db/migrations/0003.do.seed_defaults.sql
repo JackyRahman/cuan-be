@@ -17,9 +17,9 @@ ON CONFLICT (name) DO NOTHING;
 INSERT INTO companies (id, name, code, address)
 VALUES (
   '00000000-0000-0000-0000-000000000001',
-  'Perusahaan Contoh',
-  'DEFAULT',
-  'Alamat contoh, Jakarta, Indonesia'
+  'PT CUAN ABADI',
+  'CUAN',
+  'Jl. Kebon Jeruk No. 1, Jakarta'
 )
 ON CONFLICT (code) DO NOTHING;
 
@@ -42,26 +42,26 @@ BEGIN
     )
     ON CONFLICT (company_id, code) WHERE code IS NOT NULL DO NOTHING;
 
-    -- -- Seed common Indonesian product categories
-    -- INSERT INTO categories (company_id, name, code)
-    -- SELECT v_company_id, c.name, c.code
-    -- FROM (
-    --   VALUES
-    --     ('Sembako', 'SEM'),
-    --     ('Minuman', 'MIN'),
-    --     ('Makanan Ringan', 'SNK'),
-    --     ('Perawatan Pribadi', 'PRP'),
-    --     ('Kebersihan Rumah', 'KBR'),
-    --     ('Elektronik', 'ELK'),
-    --     ('ATK & Kantor', 'ATK'),
-    --     ('Pakaian & Aksesoris', 'PKN'),
-    --     ('Ibu & Bayi', 'IBB'),
-    --     ('Makanan Beku', 'BKU')
-    -- ) AS c(name, code)
-    -- WHERE NOT EXISTS (
-    --   SELECT 1 FROM categories existing
-    --   WHERE existing.company_id = v_company_id
-    --     AND (existing.name = c.name OR (existing.code IS NOT NULL AND existing.code = c.code))
+    -- Seed common Indonesian product categories
+    INSERT INTO categories (company_id, name, code)
+    SELECT v_company_id, c.name, c.code
+    FROM (
+      VALUES
+        ('Sembako', 'SEM'),
+        ('Minuman', 'MIN'),
+        ('Makanan Ringan', 'SNK'),
+        ('Perawatan Pribadi', 'PRP'),
+        ('Kebersihan Rumah', 'KBR'),
+        ('Elektronik', 'ELK'),
+        ('ATK & Kantor', 'ATK'),
+        ('Pakaian & Aksesoris', 'PKN'),
+        ('Ibu & Bayi', 'IBB'),
+        ('Makanan Beku', 'BKU')
+    ) AS c(name, code)
+    WHERE NOT EXISTS (
+      SELECT 1 FROM categories existing
+      WHERE existing.company_id = v_company_id
+        AND (existing.name = c.name OR (existing.code IS NOT NULL AND existing.code = c.code))
     -- );
 
     -- Seed common measurement units
